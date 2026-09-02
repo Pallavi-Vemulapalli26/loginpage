@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Forgot Username</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+    <div class="login-container">
+
+        <h1>Forgot Username?</h1>
+
+        <form action="/forgot-username" method="GET">
+
+            <label>Enter your Email</label>
+
+            <input
+                type="email"
+                name="Email"
+                placeholder="Enter your email"
+                required
+            >
+
+            <button type="submit">
+                Find Username
+            </button>
+
+        </form>
+
+        <p>
+            Remember your username?
+            <a href="/">Back to Login</a>
+        </p>
+
+    </div>
+
+</body>
+
+</html>

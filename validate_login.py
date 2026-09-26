@@ -53,3 +53,16 @@ def get_username_by_email(email):
     conn.close()
 
     return emailresult
+
+def check_email_existance(email):
+
+    result = get_username_by_email(email)
+
+    username_result = None
+
+    if result == None:
+        username_result = "Invalid email"
+    else:
+        username_result = "Your username is: " + result[0]
+
+    return username_result

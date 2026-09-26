@@ -1,6 +1,96 @@
-<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="logindb.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="686"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="logindetails" custom_title="0" dock_id="3" table="4,12:mainlogindetails"/><dock_state state="000000ff00000000fd00000001000000020000039100000260fc0100000003fb000000160064006f0063006b00420072006f00770073006500310100000000ffffffff0000000000000000fb000000160064006f0063006b00420072006f00770073006500320100000000000003910000000000000000fb000000160064006f0063006b00420072006f00770073006500330100000000000003910000011e00ffffff000002690000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="logindetails" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="65"/><column index="2" value="62"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1*">INSERT INTO logindetails (username, password) VALUES ('bobby', '12345');
-INSERT INTO logindetails VALUES ('kathya', '54321');
-INSERT INTO logindetails VALUES ('ammu', '123456');
-INSERT INTO logindetails VALUES ('chandu', '543216');
-INSERT INTO logindetails VALUES ('pandu', '1234567');
-select * from logindetails;</sql><current_tab id="0"/></tab_sql></sqlb_project>
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="logindb.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="2250"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="logindetails" custom_title="0" dock_id="3" table="4,12:mainlogindetails"/><dock_state state="000000ff00000000fd0000000100000002000003910000025efc0100000003fb000000160064006f0063006b00420072006f00770073006500310100000000ffffffff0000000000000000fb000000160064006f0063006b00420072006f00770073006500320100000000000003910000000000000000fb000000160064006f0063006b00420072006f00770073006500330100000000000003910000016200ffffff000003910000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="logindetails" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="35"/><column index="2" value="79"/><column index="3" value="62"/><column index="4" value="143"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1">INSERT INTO logindetails (username, password) VALUES ('bobby', '12345');
+INSERT INTO logindetails VALUES ('kathya', '54321');
+INSERT INTO logindetails VALUES ('ammu', '123456');
+INSERT INTO logindetails VALUES ('chandu', '543216');
+INSERT INTO logindetails VALUES ('pandu', '1234567');
+select * from logindetails;
+ALTER TABLE logindetails ADD COLUMN email TEXT;
+UPDATE logindetails SET email = 'ammu@gmail.com' WHERE username = 'ammu';
+UPDATE logindetails SET email = 'bobby@gmail.com' WHERE username = 'bobby';
+UPDATE logindetails SET email = 'kathya@gmail.com' WHERE username = 'kathya';
+UPDATE logindetails SET email = 'chandu@gmail.com' WHERE username = 'chandu';
+UPDATE logindetails SET email = 'pandu@gmail.com' WHERE username = 'pandu';
+INSERT INTO logindetails (username, password,email) VALUES ('sunitha', '12345','sunitha@gmail.com');
+INSERT INTO logindetails (username, password,email) VALUES ('srinu', '12345','srinu@gmail.com');
+UPDATE logindetails SET username = 'pallavi' ,password = '123456', email = 'pallavi@gmail.com' WHERE username= 'pandu';
+DELETE FROM logindetails WHERE id=6;
+ALTER TABLE logindetails ADD COLUMN id INTEGER PRIMARY KEY NOT NULL;
+
+ALTER TABLE logindetails RENAME TO logindetails_old;
+
+CREATE TABLE logindetails (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL,
+    password TEXT NOT NULL,
+    email TEXT NOT NULL
+);
+
+INSERT INTO logindetails (username, password, email)
+SELECT username, password, email
+FROM logindetails_old;
+
+DROP TABLE category;
+DROP TABLE products;
+CREATE TABLE category (
+    category_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    category_name TEXT NOT NULL,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
+
+CREATE TABLE products (
+    product_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    product_name TEXT NOT NULL,
+    price REAL NOT NULL,
+    product_description TEXT,
+    image TEXT,
+    category_id INTEGER NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (category_id) REFERENCES category(category_id)
+);
+INSERT INTO category (category_name) VALUES
+('Clothes'),
+('Shoes'),
+('Electronics'),
+('Books'),
+('Beauty'),
+('Home Appliances'),
+('Accessories'),
+('Sports');
+SELECT * FROM category;
+
+
+
+INSERT INTO products
+(product_name, price, product_description, image, category_id)
+VALUES
+('Cotton Kurti', 799, 'Comfortable cotton kurti', 'kurti.jpg', 1),
+('Denim Jacket', 1499, 'Blue denim jacket', 'jacket.jpg', 1),
+('Formal Shirt', 999, 'Slim fit formal shirt', 'shirt.jpg', 1),
+
+('Nike Running Shoes', 2999, 'Lightweight running shoes', 'nike.jpg', 2),
+('Adidas Sneakers', 3999, 'White casual sneakers', 'adidas.jpg', 2),
+('Sports Sandals', 899, 'Comfortable sports sandals', 'sandals.jpg', 2),
+
+('Wireless Earbuds', 1299, 'Bluetooth wireless earbuds', 'earbuds.jpg', 3),
+('Bluetooth Speaker', 2499, 'Portable Bluetooth speaker', 'speaker.jpg', 3),
+('USB Keyboard', 799, 'Wireless USB keyboard', 'keyboard.jpg', 3),
+('iPhone 17', 100000, 'iPhone in white colour','iphone.jpg', 3),
+('Laptop', 299999, 'Laptop with i4 processor', 'laptop.jpg', 3),
+
+('Python Programming Book', 599, 'Beginner Python programming book', 'python-book.jpg', 4),
+('Database Design Book', 799, 'Guide to database design', 'database-book.jpg', 4),
+
+('Face Wash', 299, 'Gentle face wash', 'facewash.jpg', 5),
+('Moisturizer', 499, 'Daily skin moisturizer', 'moisturizer.jpg', 5),
+
+('Mixer Grinder', 2499, 'Three-speed mixer grinder', 'mixer.jpg', 6),
+('Electric Kettle', 1299, 'Stainless steel electric kettle', 'kettle.jpg', 6),
+
+('Leather Wallet', 699, 'Men leather wallet', 'wallet.jpg', 7),
+('Backpack', 1199, 'Water-resistant backpack', 'backpack.jpg', 7),
+
+('Yoga Mat', 899, 'Non-slip exercise yoga mat', 'yoga-mat.jpg', 8),
+('Cricket Bat', 2499, 'Lightweight cricket bat', 'cricket-bat.jpg', 8);
+
+SELECT * FROM products WHERE category_id =( SELECT category_id FROM category WHERE category_name LIKE '%electronics%' )
+AND price &lt; 1000000;</sql><current_tab id="0"/></tab_sql></sqlb_project>

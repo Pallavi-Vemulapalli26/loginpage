@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script>
+    async function loadUsers() {
+        try {
+            const response = await fetch("http://127.0.0.1:5000/users");
+
+            if (!response.ok) {
+                throw new Error(`HTTP error: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log(result);
+
+            const users = result.data;
+            const table = document.getElementById("userTable");
+
+            table.innerHTML = "";
+
+            users.forEach((user) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `<td>${user.id}</td> <td>${user.name}</td> <td>${user.email}</td>`;
+                table.appendChild(row);
+            });
+
+        } catch (error) {
+            console.error("Error loading users:", error);
+        }
+    }
+
+    loadUsers();
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>All Users</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 40px;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #333;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>All Users</h1>
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Password</th>
+                </tr>
+            </thead>
+
+            <tbody id="userTable">
+                <!-- User data will be populated here by JavaScript -->
+
+                
+            </tbody>
+
+        </table>
+
+    </div>
+
+</body>
+
+</html>

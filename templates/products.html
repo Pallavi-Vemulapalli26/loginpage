@@ -1,107 +1,637 @@
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My Products</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>NOIR | Premium Store</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
+          rel="stylesheet">
 
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial;
-            background: #f5f5f5;
-            padding: 20px;
+            background: #0b0b0c;
+            color: #f5f0e8;
+            font-family: 'DM Sans', sans-serif;
         }
 
-        h1 {
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* NAVBAR */
+
+        nav {
+            height: 85px;
+            padding: 0 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #252321;
+            background: #0b0b0c;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 30px;
+            letter-spacing: 5px;
+            color: #d6b477;
+        }
+
+        .nav-text {
+            color: #aaa49a;
+            font-size: 13px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* HERO SECTION */
+
+        .hero {
+            padding: 85px 20px 65px;
             text-align: center;
+            background:
+                radial-gradient(
+                    ellipse at top,
+                    #292117 0%,
+                    #11100f 45%,
+                    #0b0b0c 80%
+                );
         }
 
-        form {
-            text-align: center;
-            margin: 30px;
+        .eyebrow {
+            color: #d6b477;
+            letter-spacing: 5px;
+            font-size: 11px;
+            text-transform: uppercase;
+            margin-bottom: 22px;
         }
 
-        input {
-            padding: 12px;
-            width: 300px;
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(38px, 6vw, 68px);
+            font-weight: 500;
+            line-height: 1.15;
+            margin-bottom: 20px;
         }
 
-        button {
-            padding: 12px;
-            background: blue;
-            color: white;
+        .hero h1 span {
+            color: #d6b477;
+            font-style: italic;
+        }
+
+        .hero p {
+            color: #aaa49a;
+            font-size: 15px;
+            line-height: 1.8;
+            margin-bottom: 35px;
+        }
+
+        /* SEARCH BAR */
+
+        .search-box {
+            max-width: 650px;
+            margin: auto;
+            display: flex;
+            padding: 7px;
+            background: #171615;
+            border: 1px solid #49402f;
+            border-radius: 8px;
+        }
+
+        .search-box input {
+            flex: 1;
+            min-width: 0;
+            background: transparent;
             border: none;
+            outline: none;
+            padding: 15px;
+            color: white;
+            font-size: 14px;
         }
+
+        .search-box input::placeholder {
+            color: #77716a;
+        }
+
+        .search-box button {
+            background: #d6b477;
+            color: #17130c;
+            border: none;
+            padding: 0 28px;
+            border-radius: 5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .search-box button:hover {
+            background: #f0d39b;
+        }
+
+        /* CATEGORY LINKS */
+
+        .categories {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .category-link {
+            padding: 10px 20px;
+            border: 1px solid #37332d;
+            border-radius: 30px;
+            color: #c5beb2;
+            font-size: 13px;
+            transition: 0.3s;
+        }
+
+        .category-link:hover {
+            background: #d6b477;
+            color: #111;
+            border-color: #d6b477;
+        }
+
+        /* PRODUCTS SECTION */
+
+        .store {
+            padding: 45px 7% 90px;
+        }
+
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .section-heading h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 500;
+        }
+
+        .section-heading h2 span {
+            color: #d6b477;
+        }
+
+        .result-count {
+            color: #8d877e;
+            font-size: 13px;
+        }
+
+        /* PRODUCT GRID */
 
         .products {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
+            display: grid;
+            grid-template-columns:
+                repeat(auto-fit, minmax(230px, 1fr));
+            gap: 25px;
         }
 
-        .card {
-            background: white;
-            padding: 15px;
-            width: 220px;
+        .product-card {
+            background: #141413;
+            border: 1px solid #292725;
             border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s, border-color 0.3s;
         }
 
-        img {
+        .product-card:hover {
+            transform: translateY(-7px);
+            border-color: #a78b56;
+        }
+
+        .image-box {
             width: 100%;
-            height: 150px;
-            object-fit: contain;
+            height: 260px;
+            background: #1c1b19;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .image-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .product-card:hover .image-box img {
+            transform: scale(1.06);
+        }
+
+        .image-placeholder {
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #77716a;
+            font-size: 13px;
+            letter-spacing: 2px;
+        }
+
+        .product-info {
+            padding: 22px;
+        }
+
+        .product-category {
+            color: #d6b477;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .product-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 21px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .description {
+            font-size: 13px;
+            color: #918b82;
+            line-height: 1.7;
+            min-height: 44px;
+            margin-bottom: 20px;
+        }
+
+        .product-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #302d28;
+            padding-top: 18px;
         }
 
         .price {
-            color: green;
-            font-weight: bold;
+            color: #e0c18a;
+            font-size: 21px;
+            font-weight: 600;
+        }
+
+        .price-label {
+            color: #77716a;
+            font-size: 10px;
+            margin-bottom: 5px;
+        }
+
+        .product-number {
+            color: #77716a;
+            font-size: 12px;
+        }
+
+        /* EMPTY RESULTS */
+
+        .empty {
+            text-align: center;
+            padding: 70px 20px;
+            border: 1px solid #292725;
+            background: #141413;
+            border-radius: 10px;
+        }
+
+        .empty h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+
+        .empty p {
+            color: #918b82;
+            line-height: 1.8;
+        }
+
+        .clear-btn {
+            display: inline-block;
+            margin-top: 25px;
+            background: #d6b477;
+            color: #111;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        /* FOOTER */
+
+        footer {
+            border-top: 1px solid #292725;
+            padding: 35px 20px;
+            text-align: center;
+            color: #77716a;
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        footer span {
+            color: #d6b477;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 600px) {
+            nav {
+                padding: 0 5%;
+                height: 70px;
+            }
+
+            .logo {
+                font-size: 24px;
+            }
+
+            .nav-text {
+                font-size: 10px;
+            }
+
+            .hero {
+                padding: 60px 18px 45px;
+            }
+
+            .search-box button {
+                padding: 0 16px;
+            }
+
+            .store {
+                padding: 35px 5% 60px;
+            }
+
+            .products {
+                grid-template-columns:
+                    repeat(auto-fit, minmax(160px, 1fr));
+                gap: 14px;
+            }
+
+            .image-box {
+                height: 190px;
+            }
+
+            .product-info {
+                padding: 15px;
+            }
+
+            .product-name {
+                font-size: 18px;
+            }
+
+            .description {
+                font-size: 12px;
+            }
+
+            .price {
+                font-size: 18px;
+            }
         }
     </style>
 </head>
 
 <body>
 
-<h1>My Products</h1>
+    <!-- NAVBAR -->
 
-<form action="/products" method="GET">
-    <input
-        type="text"
-        name="q"
-        value="{{ search }}"
-        placeholder="Electronics under 10000"
-    >
+    <nav>
+        <a href="/products" class="logo">NOIR.</a>
 
-    <button type="submit">Search</button>
-</form>
+        <div class="nav-text">
+            The Premium Collection
+        </div>
+    </nav>
 
-<div class="products">
 
-    {% for p in products %}
+    <!-- HERO -->
 
-    <div class="card">
+    <section class="hero">
 
-        <img
-            src="{{ url_for('static',
-            filename='products/' + p['image']) }}"
-            onerror="this.style.display='none'"
-        >
+        <div class="eyebrow">
+            Discover Something Exceptional
+        </div>
 
-        <h3>{{ p['product_name'] }}</h3>
+        <h1>
+            Find Your <span>Perfect</span><br>
+            Everyday Luxury.
+        </h1>
 
-        <p>{{ p['category_name'] }}</p>
+        <p>
+            Explore a curated collection of fashion, technology,
+            lifestyle and more.<br>
+            Quality products, all in one place.
+        </p>
 
-        <p class="price">₹{{ p['price'] }}</p>
+        <!-- SEARCH -->
 
-        <p>{{ p['product_description'] }}</p>
+        <form action="/products"
+              method="GET"
+              class="search-box">
 
-    </div>
+            <input
+                type="text"
+                name="q"
+                value="{{ search }}"
+                placeholder="Search products, categories, prices..."
+            >
 
-    {% else %}
+            <button type="submit">
+                Search
+            </button>
 
-    <p>No products found.</p>
+        </form>
 
-    {% endfor %}
+        <!-- CATEGORY LINKS -->
 
-</div>
+        <div class="categories">
+
+            <a href="/products" class="category-link">
+                All Products
+            </a>
+
+            <a href="/products?q=Clothes"
+               class="category-link">
+                Clothes
+            </a>
+
+            <a href="/products?q=Shoes"
+               class="category-link">
+                Shoes
+            </a>
+
+            <a href="/products?q=Electronics"
+               class="category-link">
+                Electronics
+            </a>
+
+            <a href="/products?q=Books"
+               class="category-link">
+                Books
+            </a>
+
+            <a href="/products?q=Beauty"
+               class="category-link">
+                Beauty
+            </a>
+
+            <a href="/products?q=Home Appliances"
+               class="category-link">
+                Home
+            </a>
+
+            <a href="/products?q=Accessories"
+               class="category-link">
+                Accessories
+            </a>
+
+            <a href="/products?q=Sports"
+               class="category-link">
+                Sports
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- PRODUCTS -->
+
+    <section class="store">
+
+        <div class="section-heading">
+
+            <h2>
+                Our <span>Collection</span>
+            </h2>
+
+            <div class="result-count">
+                {{ products|length }} products found
+            </div>
+
+        </div>
+
+
+        {% if products %}
+
+        <div class="products">
+
+            {% for p in products %}
+
+            <div class="product-card">
+
+                <!-- PRODUCT IMAGE -->
+
+                <div class="image-box">
+
+                    {% if p['image'] %}
+
+                    <img
+                        src="{{ url_for(
+                            'static',
+                            filename='products/' + p['image']
+                        ) }}"
+                        alt="{{ p['product_name'] }}"
+                        onerror="
+                            this.style.display='none';
+                            this.nextElementSibling.style.display='flex';
+                        "
+                    >
+
+                    {% endif %}
+
+                    <div class="image-placeholder"
+                         style="display:
+                         {% if p['image'] %}none{% else %}flex{% endif %};">
+
+                        IMAGE COMING SOON
+
+                    </div>
+
+                </div>
+
+
+                <!-- PRODUCT DETAILS -->
+
+                <div class="product-info">
+
+                    <div class="product-category">
+                        {{ p['category_name'] }}
+                    </div>
+
+                    <h3 class="product-name">
+                        {{ p['product_name'] }}
+                    </h3>
+
+                    <p class="description">
+                        {{ p['product_description'] or
+                           'Discover this product from our collection.' }}
+                    </p>
+
+                    <div class="product-bottom">
+
+                        <div>
+                            <div class="price-label">
+                                PRICE
+                            </div>
+
+                            <div class="price">
+                                ₹{{ "{:,.0f}".format(p['price']) }}
+                            </div>
+                        </div>
+
+                        <div class="product-number">
+                            NO. {{ "%03d"|format(p['product_id']) }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <div class="empty">
+
+            <h3>No products found</h3>
+
+            <p>
+                We couldn't find a match for your search.<br>
+                Try another product name, category, or price.
+            </p>
+
+            <a href="/products" class="clear-btn">
+                View All Products
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+        NOIR. &nbsp; | &nbsp;
+        <span>THE ART OF EVERYDAY LIVING</span>
+    </footer>
 
 </body>
 </html>

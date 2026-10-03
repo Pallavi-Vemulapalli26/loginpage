@@ -5,6 +5,7 @@ import validate_login, re
 import create_user 
 import update_user
 import delete_user
+from controllers.products_controller import search_products
 from flask import Flask, jsonify, request, render_template
 from controllers.login_search_controller import search_users_db
 
@@ -148,8 +149,15 @@ def search_users():
         searched=bool(search)
     )
 
-from controllers.products_controller import product_bp
-app.register_blueprint(product_bp)
+@app.route("/products", methods=["GET"])
+def products():
+    search = request.args.get("q", "").strip()
+    products = search_products()
+    return render_template(
+        "products.html",
+        products=products,
+        search=search,
+    )
 
 if __name__ == '__main__':
     app.run(debug=True)

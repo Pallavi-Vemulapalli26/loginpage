@@ -1,66 +1,53 @@
 
-from flask import Blueprint, request, render_template
-import sqlite3
+import re
+from flask import request
+from controllers.products_service import get_products
 
-product_bp = Blueprint("products", __name__)
+def search_products():
+    query = request.args.get("q", "").strip()
+    remaining = query
 
+    categories = [
+        "Clothes",
+        "Shoes",
+        "Electronics",
+        "Books",
+        "Beauty",
+        "Home Appliances",
+        "Accessories",
+        "Sports",
+    ]
 
-@product_bp.route("/products")
-def products():
+    category = next(
+        (item for item in categories if item.lower() in query.lower()),
+        None,
+    )
 
-    search = request.args.get("q", "").lower()
+    if category:
+        remaining = re.sub(
+            re.escape(category), "", remaining, flags=re.IGNORECASE
+        )
 
-    conn = sqlite3.connect("logindb.db")
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
+    price_match = re.search(
+        r"\b(?:under|below)\s+(\d+(?:\.\d+)?k?)\b",
+        remaining,
+        flags=re.IGNORECASE,
+    )
 
-    sql = """
-        SELECT products.*, category.category_name
-        FROM products
-        JOIN category
-        ON products.category_id = category.category_id
-        WHERE 1=1
-    """
+    max_price = None
+    if price_match:
+        price_text = price_match.group(1).lower()
+        max_price = (
+            float(price_text[:-1]) * 1000
+            if price_text.endswith("k")
+            else float(price_text)
+        )
+        remaining = remaining.replace(price_match.group(0), "")
 
-    values = []
+    search = remaining.strip() or None
 
-    # Search by product name, description, or category
-    if search:
-        words = search.split()
-
-        for word in words:
-
-            # Ignore simple search words
-            if word in ["show", "all", "products", "i", "want", "under", "below", "in", "for", "less", "than"]:
-                continue
-
-            # If word is a price, filter by price
-            if word.isdigit():
-                sql += " AND products.price <= ?"
-                values.append(int(word))
-
-            else:
-                sql += """
-                    AND (
-                        LOWER(products.product_name) LIKE ?
-                        OR LOWER(products.product_description) LIKE ?
-                        OR LOWER(category.category_name) LIKE ?
-                    )
-                """
-
-                values.extend([
-                    "%" + word + "%",
-                    "%" + word + "%",
-                    "%" + word + "%"
-                ])
-
-    cursor.execute(sql, values)
-    products = cursor.fetchall()
-
-    conn.close()
-
-    return render_template(
-        "products.html",
-        products=products,
-        search=search
+    return get_products(
+        category=category,
+        max_price=max_price,
+        search=search,
     )

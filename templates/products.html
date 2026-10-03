@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>NOIR | Premium Store</title>
+    <title>SURENYA | Premium Store</title>
 
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
           rel="stylesheet">
@@ -244,6 +244,10 @@
             letter-spacing: 2px;
         }
 
+        .image-placeholder.hidden {
+            display: none;
+        }
+
         .product-info {
             padding: 22px;
         }
@@ -406,7 +410,7 @@
     <!-- NAVBAR -->
 
     <nav>
-        <a href="/products" class="logo">NOIR.</a>
+        <a href="/products" class="logo">SURENYA.</a>
 
         <div class="nav-text">
             The Premium Collection
@@ -539,7 +543,7 @@
                     <img
                         src="{{ url_for(
                             'static',
-                            filename='products/' + p['image']
+                            filename='images/' + p['image']
                         ) }}"
                         alt="{{ p['product_name'] }}"
                         onerror="
@@ -550,9 +554,7 @@
 
                     {% endif %}
 
-                    <div class="image-placeholder"
-                         style="display:
-                         {% if p['image'] %}none{% else %}flex{% endif %};">
+                    <div class="image-placeholder{% if p['image'] %} hidden{% endif %}">
 
                         IMAGE COMING SOON
 
@@ -629,9 +631,16 @@
     <!-- FOOTER -->
 
     <footer>
-        NOIR. &nbsp; | &nbsp;
+        SURENYA. &nbsp; | &nbsp;
         <span>THE ART OF EVERYDAY LIVING</span>
     </footer>
+<script>
+    const navigation = performance.getEntriesByType("navigation")[0];
+    const query = new URLSearchParams(window.location.search);
 
+    if (navigation?.type === "reload" && query.has("q")) {
+        window.location.replace("/products");
+    }
+</script>
 </body>
 </html>

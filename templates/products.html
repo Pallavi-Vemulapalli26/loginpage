@@ -1,9 +1,12 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>SURENYA | Premium Store</title>
 
@@ -11,6 +14,7 @@
           rel="stylesheet">
 
     <style>
+
         * {
             margin: 0;
             padding: 0;
@@ -27,6 +31,7 @@
             text-decoration: none;
             color: inherit;
         }
+
 
         /* NAVBAR */
 
@@ -54,7 +59,8 @@
             text-transform: uppercase;
         }
 
-        /* HERO SECTION */
+
+        /* HERO */
 
         .hero {
             padding: 85px 20px 65px;
@@ -96,7 +102,8 @@
             margin-bottom: 35px;
         }
 
-        /* SEARCH BAR */
+
+        /* SEARCH */
 
         .search-box {
             max-width: 650px;
@@ -138,6 +145,7 @@
             background: #f0d39b;
         }
 
+
         /* CATEGORY LINKS */
 
         .categories {
@@ -155,6 +163,7 @@
             color: #c5beb2;
             font-size: 13px;
             transition: 0.3s;
+            cursor: pointer;
         }
 
         .category-link:hover {
@@ -163,7 +172,8 @@
             border-color: #d6b477;
         }
 
-        /* PRODUCTS SECTION */
+
+        /* PRODUCTS */
 
         .store {
             padding: 45px 7% 90px;
@@ -192,6 +202,7 @@
             color: #8d877e;
             font-size: 13px;
         }
+
 
         /* PRODUCT GRID */
 
@@ -244,9 +255,8 @@
             letter-spacing: 2px;
         }
 
-        .image-placeholder.hidden {
-            display: none;
-        }
+
+        /* PRODUCT INFO */
 
         .product-info {
             padding: 22px;
@@ -301,7 +311,52 @@
             font-size: 12px;
         }
 
-        /* EMPTY RESULTS */
+        .product-colors {
+            margin-top: 14px;
+            color: #aaa49a;
+            font-size: 13px;
+        }
+
+
+        /* OFFERS */
+
+        .offers {
+            margin-top: 20px;
+            border-top: 1px solid #302d28;
+            padding-top: 18px;
+        }
+
+        .offer-title {
+            color: #d6b477;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .offer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1c1b19;
+            padding: 10px 12px;
+            border-radius: 5px;
+            margin-bottom: 7px;
+        }
+
+        .offer-type {
+            color: #c5beb2;
+            font-size: 12px;
+        }
+
+        .discount {
+            color: #e0c18a;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+
+        /* EMPTY */
 
         .empty {
             text-align: center;
@@ -331,7 +386,9 @@
             border-radius: 5px;
             font-size: 13px;
             font-weight: 700;
+            cursor: pointer;
         }
+
 
         /* FOOTER */
 
@@ -348,9 +405,11 @@
             color: #d6b477;
         }
 
+
         /* MOBILE */
 
         @media (max-width: 600px) {
+
             nav {
                 padding: 0 5%;
                 height: 70px;
@@ -401,20 +460,29 @@
             .price {
                 font-size: 18px;
             }
+
         }
+
     </style>
+
 </head>
 
+
 <body>
+
 
     <!-- NAVBAR -->
 
     <nav>
-        <a href="/products" class="logo">SURENYA.</a>
+
+        <a href="#" class="logo">
+            SURENYA.
+        </a>
 
         <div class="nav-text">
             The Premium Collection
         </div>
+
     </nav>
 
 
@@ -437,16 +505,15 @@
             Quality products, all in one place.
         </p>
 
+
         <!-- SEARCH -->
 
-        <form action="/products"
-              method="GET"
+        <form id="searchForm"
               class="search-box">
 
             <input
                 type="text"
-                name="q"
-                value="{{ search }}"
+                id="searchInput"
                 placeholder="Search products, categories, prices..."
             >
 
@@ -456,51 +523,62 @@
 
         </form>
 
+
         <!-- CATEGORY LINKS -->
 
         <div class="categories">
 
-            <a href="/products" class="category-link">
+            <a href="#"
+               class="category-link"
+               data-query="">
                 All Products
             </a>
 
-            <a href="/products?q=Clothes"
-               class="category-link">
+            <a href="#"
+               class="category-link"
+               data-query="Clothes">
                 Clothes
             </a>
 
-            <a href="/products?q=Shoes"
-               class="category-link">
+            <a href="#"
+               class="category-link"
+               data-query="Shoes">
                 Shoes
             </a>
 
-            <a href="/products?q=Electronics"
-               class="category-link">
+            <a href="#"
+               class="category-link"
+               data-query="Electronics">
                 Electronics
             </a>
 
-            <a href="/products?q=Books"
-               class="category-link">
+            <a href="#"
+               class="category-link"
+               data-query="Books">
                 Books
             </a>
 
-            <a href="/products?q=Beauty"
-               class="category-link">
+            <a href="#"
+               class="category-link"
+               data-query="Beauty">
                 Beauty
             </a>
 
-            <a href="/products?q=Home Appliances"
-               class="category-link">
+            <a href="#"
+               class="category-link"
+               data-query="Home Appliances">
                 Home
             </a>
 
-            <a href="/products?q=Accessories"
-               class="category-link">
+            <a href="#"
+               class="category-link"
+               data-query="Accessories">
                 Accessories
             </a>
 
-            <a href="/products?q=Sports"
-               class="category-link">
+            <a href="#"
+               class="category-link"
+               data-query="Sports">
                 Sports
             </a>
 
@@ -519,111 +597,39 @@
                 Our <span>Collection</span>
             </h2>
 
-            <div class="result-count">
-                {{ products|length }} products found
+            <div class="result-count"
+                 id="resultCount">
+                Loading products...
             </div>
 
         </div>
 
 
-        {% if products %}
-
-        <div class="products">
-
-            {% for p in products %}
-
-            <div class="product-card">
-
-                <!-- PRODUCT IMAGE -->
-
-                <div class="image-box">
-
-                    {% if p['image'] %}
-
-                    <img
-                        src="{{ url_for(
-                            'static',
-                            filename='images/' + p['image']
-                        ) }}"
-                        alt="{{ p['product_name'] }}"
-                        onerror="
-                            this.style.display='none';
-                            this.nextElementSibling.style.display='flex';
-                        "
-                    >
-
-                    {% endif %}
-
-                    <div class="image-placeholder{% if p['image'] %} hidden{% endif %}">
-
-                        IMAGE COMING SOON
-
-                    </div>
-
-                </div>
-
-
-                <!-- PRODUCT DETAILS -->
-
-                <div class="product-info">
-
-                    <div class="product-category">
-                        {{ p['category_name'] }}
-                    </div>
-
-                    <h3 class="product-name">
-                        {{ p['product_name'] }}
-                    </h3>
-
-                    <p class="description">
-                        {{ p['product_description'] or
-                           'Discover this product from our collection.' }}
-                    </p>
-
-                    <div class="product-bottom">
-
-                        <div>
-                            <div class="price-label">
-                                PRICE
-                            </div>
-
-                            <div class="price">
-                                ₹{{ "{:,.0f}".format(p['price']) }}
-                            </div>
-                        </div>
-
-                        <div class="product-number">
-                            NO. {{ "%03d"|format(p['product_id']) }}
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            {% endfor %}
-
+        <div class="products"
+             id="productsContainer">
         </div>
 
-        {% else %}
 
-        <div class="empty">
+        <div class="empty"
+             id="emptyMessage"
+             style="display: none;">
 
-            <h3>No products found</h3>
+            <h3>
+                No products found
+            </h3>
 
             <p>
                 We couldn't find a match for your search.<br>
                 Try another product name, category, or price.
             </p>
 
-            <a href="/products" class="clear-btn">
+            <a href="#"
+               class="clear-btn"
+               id="clearSearch">
                 View All Products
             </a>
 
         </div>
-
-        {% endif %}
 
     </section>
 
@@ -631,16 +637,311 @@
     <!-- FOOTER -->
 
     <footer>
-        SURENYA. &nbsp; | &nbsp;
-        <span>THE ART OF EVERYDAY LIVING</span>
-    </footer>
-<script>
-    const navigation = performance.getEntriesByType("navigation")[0];
-    const query = new URLSearchParams(window.location.search);
 
-    if (navigation?.type === "reload" && query.has("q")) {
-        window.location.replace("/products");
+        SURENYA. &nbsp; | &nbsp;
+
+        <span>
+            THE ART OF EVERYDAY LIVING
+        </span>
+
+    </footer>
+
+
+    <!-- JAVASCRIPT -->
+
+    <script>
+
+const API_URL = "/api/products";
+
+const searchForm = document.getElementById("searchForm");
+const searchInput = document.getElementById("searchInput");
+const productsContainer = document.getElementById("productsContainer");
+const resultCount = document.getElementById("resultCount");
+const emptyMessage = document.getElementById("emptyMessage");
+
+
+function loadProducts(query = "") {
+
+    let url = API_URL;
+
+    if (query) {
+        url += "?q=" + encodeURIComponent(query);
     }
+
+    fetch(url)
+
+        .then(response => {
+
+            if (!response.ok) {
+                throw new Error("Backend error: " + response.status);
+            }
+
+            return response.json();
+
+        })
+
+        .then(async products => {
+
+            productsContainer.innerHTML = "";
+
+            resultCount.textContent =
+                products.length + " products found";
+
+            if (products.length === 0) {
+
+                emptyMessage.style.display = "block";
+                return;
+
+            }
+
+            emptyMessage.style.display = "none";
+
+            const colorCounts = await Promise.all(
+                products.map(async product => {
+                    try {
+                        const response = await fetch(
+                            "/colors?product_id=" + encodeURIComponent(product.id)
+                        );
+
+                        if (!response.ok) {
+                            throw new Error("Colors request failed: " + response.status);
+                        }
+
+                        const colors = await response.json();
+                        return colors.count;
+                    } catch (error) {
+                        console.error(
+                            "Error loading colors for product " + product.id,
+                            error
+                        );
+                        return null;
+                    }
+                })
+            );
+
+            products.forEach((product, index) => {
+
+                let offersHTML = "";
+
+                product.offers.forEach(offer => {
+
+                    offersHTML += `
+
+                        <div class="offer">
+
+                            <span class="offer-type">
+                                ${offer.offer_type}
+                            </span>
+
+                            <span class="discount">
+                                ₹${Number(
+                                    offer.discount_amount
+                                ).toFixed(2)}
+                            </span>
+
+                        </div>
+
+                    `;
+
+                });
+
+
+                const card = `
+
+                    <div class="product-card">
+
+                        <div class="image-box">
+
+                            ${
+                                product.image
+
+                                ?
+
+                                `
+
+                                <img
+                                    src="/static/images/${product.image}"
+                                    alt="${product.name}"
+
+                                    onerror="
+                                        this.style.display='none';
+                                        this.nextElementSibling.style.display='flex';
+                                    "
+                                >
+
+                                `
+
+                                :
+
+                                ""
+
+                            }
+
+                            <div
+                                class="image-placeholder"
+                                style="${
+                                    product.image
+                                    ? "display:none;"
+                                    : ""
+                                }">
+
+                                IMAGE COMING SOON
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="product-info">
+
+                            <h3 class="product-name">
+                                ${product.name}
+                            </h3>
+
+
+                            <p class="description">
+
+                                ${
+                                    product.description ||
+                                    "Discover this product from our collection."
+                                }
+
+                            </p>
+
+
+                            <div class="product-bottom">
+
+                                <div>
+
+                                    <div class="price-label">
+                                        PRICE
+                                    </div>
+
+                                    <div class="price">
+
+                                        ₹${Number(
+                                            product.price
+                                        ).toLocaleString("en-IN")}
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="product-number">
+
+                                    NO.
+                                    ${
+                                        String(
+                                            product.id
+                                        ).padStart(3, "0")
+                                    }
+
+                                </div>
+
+                            </div>
+
+                            <div class="product-colors">
+                                Colors: ${colorCounts[index] ?? "Unavailable"}
+                            </div>
+
+
+                            <div class="offers">
+
+                                <div class="offer-title">
+                                    Available Offers
+                                </div>
+
+                                ${offersHTML}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+
+                productsContainer.innerHTML += card;
+
+            });
+
+        })
+
+
+        .catch(error => {
+
+            console.error(
+                "Error loading products:",
+                error
+            );
+
+            resultCount.textContent =
+                "Unable to load products";
+
+        });
+
+}
+
+
+searchForm.addEventListener(
+    "submit",
+    function(event) {
+
+        event.preventDefault();
+
+        const query = searchInput.value.trim();
+
+        loadProducts(query);
+
+    }
+);
+
+
+document
+    .querySelectorAll(".category-link")
+    .forEach(link => {
+
+        link.addEventListener(
+            "click",
+            function(event) {
+
+                event.preventDefault();
+
+                const query = this.dataset.query;
+
+                searchInput.value = query;
+
+                loadProducts(query);
+
+            }
+        );
+
+    });
+
+
+document
+    .getElementById("clearSearch")
+    .addEventListener(
+        "click",
+        function(event) {
+
+            event.preventDefault();
+
+            searchInput.value = "";
+
+            loadProducts("");
+
+        }
+    );
+
+
+loadProducts("");
+
 </script>
+
+
 </body>
+
 </html>

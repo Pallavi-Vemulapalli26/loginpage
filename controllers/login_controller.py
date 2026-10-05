@@ -5,7 +5,8 @@ import validate_login, re
 import create_user 
 import update_user
 import delete_user
-from controllers.products_controller import search_products
+from flask import Flask
+from controllers.product_controller import search_products, get_colors as get_product_colors
 from flask import Flask, jsonify, request, render_template
 from controllers.login_search_controller import search_users_db
 
@@ -149,15 +150,21 @@ def search_users():
         searched=bool(search)
     )
 
-@app.route("/products", methods=["GET"])
-def products():
-    search = request.args.get("q", "").strip()
-    products = search_products()
-    return render_template(
-        "products.html",
-        products=products,
-        search=search,
-    )
 
+@app.route("/api/products", methods=["GET"])
+def products():
+    return search_products()
+@app.route("/colors", methods=["GET"])
+def colors():
+    product_id = request.args.get("product_id")
+    if not product_id:
+        return jsonify({"error": "product_id is required"}), 400
+
+    return get_product_colors(product_id)
+
+@app.route("/products", methods=["GET"])
+def products_page():
+    return render_template("products.html")
+    
 if __name__ == '__main__':
     app.run(debug=True)

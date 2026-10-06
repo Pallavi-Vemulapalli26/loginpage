@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>SURENYA | Product Details</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
+          rel="stylesheet">
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0b0b0c;
+            color: #f5f0e8;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+
+        /* NAVBAR */
+
+        nav {
+            height: 85px;
+            padding: 0 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #252321;
+            background: #0b0b0c;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 30px;
+            letter-spacing: 5px;
+            color: #d6b477;
+        }
+
+        .nav-text {
+            color: #aaa49a;
+            font-size: 13px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+
+        /* PRODUCT DETAILS */
+
+        .details-section {
+            padding: 70px 7% 100px;
+        }
+
+        .back-button {
+            display: inline-block;
+            color: #aaa49a;
+            font-size: 13px;
+            margin-bottom: 40px;
+            cursor: pointer;
+        }
+
+        .back-button:hover {
+            color: #d6b477;
+        }
+
+
+        .product-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 70px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+
+        /* IMAGE */
+
+        .product-image {
+            height: 550px;
+            background: #1c1b19;
+            border: 1px solid #292725;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-placeholder {
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #77716a;
+            font-size: 13px;
+            letter-spacing: 2px;
+        }
+
+
+        /* PRODUCT INFORMATION */
+
+        .product-info {
+            padding-top: 15px;
+        }
+
+        .product-label {
+            color: #d6b477;
+            font-size: 11px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+        }
+
+        .product-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 48px;
+            font-weight: 500;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+
+        .description {
+            color: #918b82;
+            font-size: 14px;
+            line-height: 1.9;
+            margin-bottom: 30px;
+        }
+
+
+        /* PRICE */
+
+        .price-box {
+            border-top: 1px solid #302d28;
+            border-bottom: 1px solid #302d28;
+            padding: 20px 0;
+            margin-bottom: 25px;
+        }
+
+        .price-label {
+            color: #77716a;
+            font-size: 10px;
+            letter-spacing: 2px;
+            margin-bottom: 7px;
+        }
+
+        .price {
+            color: #e0c18a;
+            font-size: 30px;
+            font-weight: 600;
+        }
+
+
+        /* COLORS */
+
+        .colors {
+            margin-top: 25px;
+        }
+
+        .section-title {
+            color: #d6b477;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .color-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .color {
+            background: #1c1b19;
+            border: 1px solid #302d28;
+            padding: 8px 13px;
+            border-radius: 5px;
+            color: #c5beb2;
+            font-size: 12px;
+        }
+
+
+        /* OFFERS */
+
+        .offers {
+            margin-top: 30px;
+            border-top: 1px solid #302d28;
+            padding-top: 22px;
+        }
+
+        .offer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1c1b19;
+            border: 1px solid #292725;
+            padding: 13px 15px;
+            border-radius: 5px;
+            margin-bottom: 8px;
+        }
+
+        .offer-type {
+            color: #c5beb2;
+            font-size: 13px;
+        }
+
+        .discount {
+            color: #e0c18a;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+
+        /* LOADING */
+
+        .loading {
+            text-align: center;
+            padding: 100px;
+            color: #918b82;
+        }
+
+
+        /* ERROR */
+
+        .error {
+            text-align: center;
+            padding: 100px;
+        }
+
+        .error h2 {
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 15px;
+        }
+
+        .error p {
+            color: #918b82;
+        }
+
+
+        /* MOBILE */
+
+        @media (max-width: 750px) {
+
+            nav {
+                padding: 0 5%;
+                height: 70px;
+            }
+
+            .logo {
+                font-size: 24px;
+            }
+
+            .nav-text {
+                font-size: 10px;
+            }
+
+            .details-section {
+                padding: 40px 5% 70px;
+            }
+
+            .product-details {
+                grid-template-columns: 1fr;
+                gap: 35px;
+            }
+
+            .product-image {
+                height: 400px;
+            }
+
+            .product-name {
+                font-size: 36px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- NAVBAR -->
+
+    <nav>
+
+        <a href="/products" class="logo">
+            SURENYA.
+        </a>
+
+        <div class="nav-text">
+            The Premium Collection
+        </div>
+
+    </nav>
+
+
+    <!-- PRODUCT DETAILS -->
+
+    <section class="details-section">
+
+        <a href="/products"
+           class="back-button">
+
+            ← Back to Collection
+
+        </a>
+
+
+        <div id="loading"
+             class="loading">
+
+            Loading product...
+
+        </div>
+
+
+        <div id="error"
+             class="error"
+             style="display: none;">
+
+            <h2>
+                Product Not Found
+            </h2>
+
+            <p>
+                We couldn't load this product.
+            </p>
+
+        </div>
+
+
+        <div id="productDetails"
+             class="product-details"
+             style="display: none;">
+
+            <!-- IMAGE -->
+
+            <div class="product-image"
+                 id="productImage">
+
+            </div>
+
+
+            <!-- INFORMATION -->
+
+            <div class="product-info">
+
+                <div class="product-label">
+                    SURENYA COLLECTION
+                </div>
+
+
+                <h1 class="product-name"
+                    id="productName">
+                </h1>
+
+
+                <p class="description"
+                   id="productDescription">
+                </p>
+
+
+                <div class="price-box">
+
+                    <div class="price-label">
+                        PRICE
+                    </div>
+
+                    <div class="price"
+                         id="productPrice">
+                    </div>
+
+                </div>
+
+
+                <!-- COLORS -->
+
+                <div class="colors">
+
+                    <div class="section-title">
+                        Available Colors
+                    </div>
+
+                    <div class="color-items"
+                         id="colorItems">
+                    </div>
+
+                </div>
+
+
+                <!-- OFFERS -->
+
+                <div class="offers">
+
+                    <div class="section-title">
+                        Available Offers
+                    </div>
+
+                    <div id="offerItems">
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        SURENYA. &nbsp; | &nbsp;
+
+        <span>
+            THE ART OF EVERYDAY LIVING
+        </span>
+
+    </footer>
+
+
+    <script>
+
+        const API_URL = "/api/product-details";
+
+        const params =
+            new URLSearchParams(window.location.search);
+
+        const productId =
+            params.get("product_id");
+
+
+        const loading =
+            document.getElementById("loading");
+
+        const error =
+            document.getElementById("error");
+
+        const productDetails =
+            document.getElementById("productDetails");
+
+
+        function loadProduct() {
+
+            if (!productId) {
+
+                loading.style.display = "none";
+                error.style.display = "block";
+
+                return;
+
+            }
+
+
+            fetch(
+                API_URL +
+                "?product_id=" +
+                encodeURIComponent(productId)
+            )
+
+            .then(response => {
+
+                if (!response.ok) {
+                    throw new Error(
+                        "Product not found"
+                    );
+                }
+
+                return response.json();
+
+            })
+
+            .then(product => {
+
+                loading.style.display = "none";
+
+                productDetails.style.display = "grid";
+
+
+                /* IMAGE */
+
+                const imageBox =
+                    document.getElementById("productImage");
+
+
+                if (product.image) {
+
+                    imageBox.innerHTML = `
+
+                        <img
+                            src="/static/images/${product.image}"
+                            alt="${product.name}"
+
+                            onerror="
+                                this.style.display='none';
+                                this.nextElementSibling.style.display='flex';
+                            "
+                        >
+
+                        <div
+                            class="image-placeholder"
+                            style="display:none;">
+
+                            IMAGE COMING SOON
+
+                        </div>
+
+                    `;
+
+                } else {
+
+                    imageBox.innerHTML = `
+
+                        <div class="image-placeholder">
+
+                            IMAGE COMING SOON
+
+                        </div>
+
+                    `;
+
+                }
+
+
+                /* NAME */
+
+                document.getElementById(
+                    "productName"
+                ).textContent = product.name;
+
+
+                /* DESCRIPTION */
+
+                document.getElementById(
+                    "productDescription"
+                ).textContent =
+                    product.description ||
+                    "Discover this product from our collection.";
+
+
+                /* PRICE */
+
+                document.getElementById(
+                    "productPrice"
+                ).textContent =
+                    "₹" +
+                    Number(product.price)
+                        .toLocaleString("en-IN");
+
+
+                /* COLORS */
+
+                const colorItems =
+                    document.getElementById("colorItems");
+
+                colorItems.innerHTML = "";
+
+
+                if (product.colors) {
+
+                    product.colors.forEach(
+                        color => {
+
+                            colorItems.innerHTML += `
+
+                                <span class="color">
+                                    ${color.color_name}
+                                </span>
+
+                            `;
+
+                        }
+                    );
+
+                }
+
+
+                /* OFFERS */
+
+                const offerItems =
+                    document.getElementById("offerItems");
+
+                offerItems.innerHTML = "";
+
+
+                if (product.offers) {
+
+                    product.offers.forEach(
+                        offer => {
+
+                            offerItems.innerHTML += `
+
+                                <div class="offer">
+
+                                    <span class="offer-type">
+                                        ${offer.offer_type}
+                                    </span>
+
+                                    <span class="discount">
+
+                                        ₹${Number(
+                                            offer.discount_amount
+                                        ).toFixed(2)}
+
+                                    </span>
+
+                                </div>
+
+                            `;
+
+                        }
+                    );
+
+                }
+
+            })
+
+            .catch(errorMessage => {
+
+                console.error(
+                    "Error loading product:",
+                    errorMessage
+                );
+
+                loading.style.display = "none";
+
+                error.style.display = "block";
+
+            });
+
+        }
+
+
+        loadProduct();
+
+    </script>
+
+
+</body>
+
+</html>

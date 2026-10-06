@@ -74,7 +74,7 @@ def get_product_details(product_id):
     return dict(product) if product is not None else None    
 
 
-if __name__ == "__main__":
-    product_id = 1
-    result = get_product_details(product_id)
-    print("Final result:", result)
+# if __name__ == "__main__":
+#     product_id = 1
+#     result = get_product_details(product_id)
+#     print("Final result:", result)

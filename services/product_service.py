@@ -2,7 +2,7 @@ import sqlite3
 from dao.product_dao import get_colors as get_product_colors
 from dao.product_dao import get_offers as get_product_offers
 DB = "logindb.db"
-
+import dao.product_dao as product_dao
 
 def get_products(category=None, max_price=None, search=None):
 

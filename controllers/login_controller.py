@@ -9,6 +9,7 @@ from flask import Flask
 from controllers.product_controller import search_products, get_colors as get_product_colors
 from flask import Flask, jsonify, request, render_template
 from controllers.login_search_controller import search_users_db
+from services.product_details_service import get_product_details
 
 app = Flask(
     __name__,
@@ -165,6 +166,25 @@ def colors():
 @app.route("/products", methods=["GET"])
 def products_page():
     return render_template("products.html")
-    
+
+
+@app.route("/api/product-details", methods=["GET"])
+def product_details_api():
+    product_id = request.args.get("product_id")
+    if not product_id:
+        return jsonify({"error": "product_id is required"}), 400
+
+    product = get_product_details(product_id)
+    if product is None:
+        return jsonify({"error": "product not found"}), 404
+
+    return jsonify(product)
+
+
+@app.route("/product-details", methods=["GET"])
+def product_details_page():
+    return render_template("product_details.html")
+
+
 if __name__ == '__main__':
     app.run(debug=True)

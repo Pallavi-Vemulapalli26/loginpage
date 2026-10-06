@@ -748,7 +748,8 @@ function loadProducts(query = "") {
 
                 const card = `
 
-                    <div class="product-card">
+                    <div class="product-card"
+                         onclick="window.location.href='/product-details?product_id=${product.id}'">
 
                         <div class="image-box">
 

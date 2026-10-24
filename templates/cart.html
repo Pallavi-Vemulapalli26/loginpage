@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SURENYA | My Cart</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0b0b0c;
+            color: #f5f0e8;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        nav {
+            height: 85px;
+            padding: 0 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #252321;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 30px;
+            letter-spacing: 5px;
+            color: #d6b477;
+            text-decoration: none;
+        }
+
+        .back {
+            color: #d6b477;
+            text-decoration: none;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 42px;
+            margin-bottom: 30px;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            padding: 20px 0;
+            border-bottom: 1px solid #302d28;
+        }
+
+        .cart-item img {
+            width: 110px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 6px;
+            background: #1c1b19;
+        }
+
+        .details {
+            flex: 1;
+        }
+
+        .details h3 {
+            margin-bottom: 10px;
+        }
+
+        .price {
+            color: #e0c18a;
+            margin-bottom: 8px;
+        }
+
+        .quantity {
+            color: #aaa49a;
+            font-size: 14px;
+        }
+
+        .summary {
+            text-align: right;
+            margin-top: 30px;
+        }
+
+        .total {
+            font-size: 24px;
+            color: #e0c18a;
+            margin: 15px 0;
+        }
+
+        button {
+            background: #d6b477;
+            color: #0b0b0c;
+            border: none;
+            padding: 12px 22px;
+            cursor: pointer;
+            font-weight: 600;
+            border-radius: 4px;
+        }
+
+        .empty {
+            color: #aaa49a;
+            padding: 30px 0;
+        }
+
+        @media (max-width: 600px) {
+            nav {
+                padding: 0 5%;
+            }
+
+            .logo {
+                font-size: 23px;
+            }
+
+            h1 {
+                font-size: 34px;
+            }
+
+            .cart-item img {
+                width: 80px;
+                height: 95px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <a href="/products" class="logo">SURENYA.</a>
+        <a href="/products" class="back">← Continue Shopping</a>
+    </nav>
+
+    <main>
+        <h1>My Shopping Cart</h1>
+
+        <div id="cartItems">Loading cart...</div>
+
+        <div class="summary" id="summary" style="display:none;">
+            <p>Total Items: <span id="totalItems">0</span></p>
+            <p class="total">Total: ₹<span id="totalPrice">0</span></p>
+            <button onclick="alert('Checkout will be added next!')">
+                Proceed to Checkout
+            </button>
+        </div>
+    </main>
+
+    <script>
+        const USER_ID = 1;
+
+        async function loadCart() {
+            const container = document.getElementById("cartItems");
+
+            try {
+                const response = await fetch(
+                    `/api/cart?user_id=${USER_ID}`
+                );
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || "Unable to load cart");
+                }
+
+                const items = data.items || [];
+
+                if (items.length === 0) {
+                    container.innerHTML =
+                        '<p class="empty">Your cart is empty.</p>';
+                    document.getElementById("summary").style.display = "none";
+                    return;
+                }
+
+                let total = 0;
+                let count = 0;
+
+                container.innerHTML = items.map(item => {
+                    const price = Number(item.price) || 0;
+                    const quantity = Number(item.quantity) || 0;
+
+                    total += price * quantity;
+                    count += quantity;
+
+                    return `
+                        <div class="cart-item">
+                            <img
+                                src="/static/images/${item.image || ''}"
+                                alt="${item.product_name}"
+                                onerror="this.style.visibility='hidden'"
+                            >
+
+                            <div class="details">
+                                <h3>${item.product_name}</h3>
+                                <p class="price">
+                                    ₹${price.toLocaleString("en-IN")}
+                                </p>
+                                <p class="quantity">
+                                    Quantity: ${quantity}
+                                </p>
+                            </div>
+                        </div>
+                    `;
+                }).join("");
+
+                document.getElementById("totalItems").textContent = count;
+                document.getElementById("totalPrice").textContent =
+                    total.toLocaleString("en-IN", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    });
+
+                document.getElementById("summary").style.display = "block";
+
+            } catch (error) {
+                container.textContent = "Error loading cart: " + error.message;
+            }
+        }
+
+        loadCart();
+    </script>
+</body>
+</html>

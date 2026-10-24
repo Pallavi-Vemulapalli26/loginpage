@@ -60,6 +60,28 @@
         }
 
 
+        .cart-link {
+            color: #d6b477;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        .cart-count {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 22px;
+            height: 22px;
+            margin-left: 5px;
+            padding: 0 6px;
+            border-radius: 50%;
+            background: #d6b477;
+            color: #111;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+
         /* HERO */
 
         .hero {
@@ -318,6 +340,29 @@
         }
 
 
+        .add-to-cart-btn {
+            width: 100%;
+            margin-top: 18px;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            background: #d6b477;
+            color: #17130c;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .add-to-cart-btn:hover {
+            background: #f0d39b;
+        }
+
+        .add-to-cart-btn:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+
+
         /* OFFERS */
 
         .offers {
@@ -482,6 +527,10 @@
         <div class="nav-text">
             The Premium Collection
         </div>
+
+        <a href="/cart" class="cart-link">
+            🛒 Cart <span class="cart-count" id="cartCount">0</span>
+        </a>
 
     </nav>
 
@@ -658,6 +707,57 @@ const searchInput = document.getElementById("searchInput");
 const productsContainer = document.getElementById("productsContainer");
 const resultCount = document.getElementById("resultCount");
 const emptyMessage = document.getElementById("emptyMessage");
+const cartCount = document.getElementById("cartCount");
+
+// Temporary user ID for testing; connect this to the logged-in user later.
+const USER_ID = 1;
+
+// Show saved cart count
+cartCount.textContent = localStorage.getItem("cartCount") || 0;
+
+
+function addToCart(event, productId) {
+
+    event.stopPropagation();
+
+    const button = event.currentTarget;
+    button.disabled = true;
+
+    fetch("/api/cart/add", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            user_id: USER_ID,
+            product_id: productId
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Unable to add product: " + response.status);
+        }
+
+        return response.json();
+    })
+    .then(data => {
+
+        let count = Number(localStorage.getItem("cartCount") || 0);
+        count = count + 1;
+
+        localStorage.setItem("cartCount", count);
+        cartCount.textContent = count;
+
+        alert(data.message || "Product added to cart");
+    })
+    .catch(error => {
+        console.error(error);
+        alert("Unable to add product to cart");
+    })
+    .finally(() => {
+        button.disabled = false;
+    });
+}
 
 
 function loadProducts(query = "") {
@@ -721,29 +821,7 @@ function loadProducts(query = "") {
 
             products.forEach((product, index) => {
 
-                let offersHTML = "";
-
-                product.offers.forEach(offer => {
-
-                    offersHTML += `
-
-                        <div class="offer">
-
-                            <span class="offer-type">
-                                ${offer.offer_type}
-                            </span>
-
-                            <span class="discount">
-                                ₹${Number(
-                                    offer.discount_amount
-                                ).toFixed(2)}
-                            </span>
-
-                        </div>
-
-                    `;
-
-                });
+                const offerCount = product.offers.length;
 
 
                 const card = `
@@ -850,12 +928,16 @@ function loadProducts(query = "") {
                             <div class="offers">
 
                                 <div class="offer-title">
-                                    Available Offers
+                                    Discounts: ${offerCount}
                                 </div>
 
-                                ${offersHTML}
-
                             </div>
+
+                            <button
+                                class="add-to-cart-btn"
+                                onclick="addToCart(event, ${product.id})">
+                                Add to Cart
+                            </button>
 
                         </div>
 

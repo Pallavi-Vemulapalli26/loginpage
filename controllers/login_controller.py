@@ -10,7 +10,7 @@ from controllers.product_controller import search_products, get_colors as get_pr
 from flask import Flask, jsonify, request, render_template
 from controllers.login_search_controller import search_users_db
 from services.product_details_service import get_product_details
-
+from controllers.cart_controller import add_to_cart, get_cart
 app = Flask(
     __name__,
     template_folder="../templates",
@@ -186,5 +186,35 @@ def product_details_page():
     return render_template("product_details.html")
 
 
+
+@app.route("/api/cart/add", methods=["POST"])
+def add_product_to_cart():
+    data = request.get_json()
+
+    user_id = data.get("user_id")
+    product_id = data.get("product_id")
+
+    result = add_to_cart(user_id, product_id)
+
+    if result:
+        return jsonify({"message": "Product added to cart"}), 200
+
+    return jsonify({"error": "Unable to add product"}), 400
+
+@app.route("/cart")
+def cart_page():
+    return render_template("cart.html")
+
+
+@app.route("/api/cart", methods=["GET"])
+def get_cart_api():
+    user_id = request.args.get("user_id", type=int)
+
+    if not user_id:
+        return jsonify({"error": "user_id is required"}), 400
+
+    return get_cart(user_id)
+
+    
 if __name__ == '__main__':
     app.run(debug=True)

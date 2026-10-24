@@ -229,6 +229,32 @@
         }
 
 
+        /* ADD TO CART */
+
+        .add-to-cart-btn {
+            width: 100%;
+            margin-top: 25px;
+            padding: 15px;
+            background: #d6b477;
+            color: #0b0b0c;
+            border: none;
+            border-radius: 5px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+        }
+
+        .add-to-cart-btn:hover {
+            background: #e0c18a;
+        }
+
+        .add-to-cart-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+
         /* LOADING */
 
         .loading {
@@ -421,6 +447,13 @@
 
                 </div>
 
+                <button
+                    class="add-to-cart-btn"
+                    id="addToCartButton"
+                    onclick="addToCart()">
+                    Add to Cart
+                </button>
+
             </div>
 
         </div>
@@ -460,6 +493,47 @@
 
         const productDetails =
             document.getElementById("productDetails");
+
+
+        const USER_ID = 1;
+
+        function addToCart() {
+
+            const button = document.getElementById("addToCartButton");
+
+            button.disabled = true;
+            button.textContent = "Adding...";
+
+            fetch("/api/cart/add", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    user_id: USER_ID,
+                    product_id: Number(productId)
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Unable to add product to cart");
+                }
+
+                return response.json();
+            })
+            .then(data => {
+                alert(data.message || "Product added to cart");
+            })
+            .catch(errorMessage => {
+                console.error("Error adding product to cart:", errorMessage);
+                alert("Unable to add product to cart. Please try again.");
+            })
+            .finally(() => {
+                button.disabled = false;
+                button.textContent = "Add to Cart";
+            });
+
+        }
 
 
         function loadProduct() {

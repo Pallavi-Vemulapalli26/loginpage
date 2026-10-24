@@ -8,6 +8,7 @@ def get_product_details(product_id):
     # print(f"Product ID requested: {product_id}")
 
     product = get_product_details_service(product_id)
+    
     # print(f"Product details: {product}")
 
     return jsonify(product)

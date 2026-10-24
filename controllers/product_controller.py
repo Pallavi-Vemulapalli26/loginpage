@@ -1,5 +1,5 @@
 from flask import request, jsonify
-
+import re
 # from services.product_service import get_products_with_offers
 from services.product_service import (
     get_products_with_offers,
@@ -31,7 +31,8 @@ def search_products():
 
     category = find_category(query)
 
-    max_price = None
+    price_match = re.search(r"\bunder\s*([\d,]+)", query, re.IGNORECASE)
+    max_price = int(price_match.group(1).replace(",", "")) if price_match else None
     search = None
 
     products = get_products_with_offers(

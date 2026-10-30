@@ -10,7 +10,13 @@ from controllers.product_controller import search_products, get_colors as get_pr
 from flask import Flask, jsonify, request, render_template
 from controllers.login_search_controller import search_users_db
 from services.product_details_service import get_product_details
-from controllers.cart_controller import add_to_cart, get_cart
+from controllers.cart_controller import (
+    add_to_cart,
+    get_cart,
+    update_cart,
+    remove_cart_product,
+)
+from controllers.order_controller import place_order, get_order, get_orders
 app = Flask(
     __name__,
     template_folder="../templates",
@@ -215,6 +221,54 @@ def get_cart_api():
 
     return get_cart(user_id)
 
-    
+from controllers.order_controller import place_order, get_order, get_orders
+
+@app.route("/api/cart/update", methods=["PUT"])
+def update_cart_api():
+    data = request.get_json()
+    return update_cart(
+        data["user_id"],
+        data["product_id"],
+        data["quantity"]
+    )
+
+
+@app.route("/api/cart/remove", methods=["DELETE"])
+def remove_cart_api():
+    data = request.get_json()
+    return remove_cart_product(
+        data["user_id"],
+        data["product_id"]
+    )
+
+
+@app.route("/api/order/place", methods=["POST"])
+def place_order_api():
+    data = request.get_json()
+    return place_order(
+        data["user_id"],
+        data["billing"],
+        data["delivery"],
+        data["payment_method"]
+    )
+
+
+@app.route("/api/orders/<int:user_id>")
+def get_orders_api(user_id):
+    return get_orders(user_id)
+
+
+@app.route("/api/order/<int:order_id>/<int:user_id>")
+def get_order_api(order_id, user_id):
+    return get_order(order_id, user_id)
+
+@app.route("/checkout")
+def checkout_page():
+    return render_template("checkout.html")
+
+@app.route("/orders")
+def orders_page():
+    return render_template("order.html")
+
 if __name__ == '__main__':
     app.run(debug=True)

@@ -4,13 +4,14 @@ import sqlite3
 DB_PATH = "logindb.db"
 
 
+# User ki new cart create cheyyadam
 def create_cart(user_id):
 
     conn = sqlite3.connect(DB_PATH)
 
     query = """
-        INSERT INTO cart (user_id)
-        VALUES (?)
+        INSERT INTO cart_order (user_id, is_order)
+        VALUES (?, 0)
     """
 
     cursor = conn.execute(query, (user_id,))
@@ -22,15 +23,16 @@ def create_cart(user_id):
 
     return cart_id
 
-# User ki already cart undo check cheyyadam
+
+# User ki already active cart undo check cheyyadam
 def get_cart_id(user_id):
 
     conn = sqlite3.connect(DB_PATH)
 
     query = """
-        SELECT cart_id
-        FROM cart
-        WHERE user_id = ?
+        SELECT cart_order_id
+        FROM cart_order
+        WHERE user_id = ? AND is_order = 0
     """
 
     cart = conn.execute(query, (user_id,)).fetchone()
@@ -41,8 +43,9 @@ def get_cart_id(user_id):
     if cart:
         return cart[0]
 
-    # Cart lekapothe new cart create cheyyadam
-    return create_cart(user_id)
+    # Cart lekapothe create cheyyakunda None return cheyyadam
+    return None
+
 
 # Product already cart lo undo check chesi add cheyyadam
 def add_to_cart(cart_id, product_id):
@@ -51,8 +54,8 @@ def add_to_cart(cart_id, product_id):
 
     query = """
         SELECT quantity
-        FROM cart_items
-        WHERE cart_id = ? AND product_id = ?
+        FROM cart_order_items
+        WHERE cart_order_id = ? AND product_id = ?
     """
 
     item = conn.execute(
@@ -61,25 +64,50 @@ def add_to_cart(cart_id, product_id):
 
     # Product already unte quantity increase cheyyadam
     if item:
+
         query = """
-            UPDATE cart_items
-            SET quantity = quantity + 1
-            WHERE cart_id = ? AND product_id = ?
+            UPDATE cart_order_items
+            SET quantity = quantity + 1,
+                subtotal = price * (quantity + 1)
+            WHERE cart_order_id = ? AND product_id = ?
         """
 
         conn.execute(query, (cart_id, product_id))
 
     # Product lekapothe new item insert cheyyadam
     else:
+
         query = """
-            INSERT INTO cart_items (cart_id, product_id, quantity)
-            VALUES (?, ?, 1)
+            SELECT price
+            FROM products
+            WHERE product_id = ?
         """
 
-        conn.execute(query, (cart_id, product_id))
+        product = conn.execute(
+            query, (product_id,)
+        ).fetchone()
+
+        if not product:
+            conn.close()
+            return False
+
+        price = product[0]
+
+        query = """
+            INSERT INTO cart_order_items
+            (cart_order_id, product_id, quantity, price, subtotal)
+            VALUES (?, ?, 1, ?, ?)
+        """
+
+        conn.execute(
+            query, (cart_id, product_id, price, price)
+        )
 
     conn.commit()
     conn.close()
+
+    return True
+
 
 # Cart lo unna products details retrieve cheyyadam
 def get_cart_items(cart_id):
@@ -91,13 +119,14 @@ def get_cart_items(cart_id):
         SELECT
             ci.product_id,
             ci.quantity,
+            ci.price,
+            ci.subtotal,
             p.product_name,
-            p.price,
             p.image
-        FROM cart_items ci
+        FROM cart_order_items ci
         JOIN products p
         ON ci.product_id = p.product_id
-        WHERE ci.cart_id = ?
+        WHERE ci.cart_order_id = ?
     """
 
     items = conn.execute(query, (cart_id,)).fetchall()
@@ -106,21 +135,31 @@ def get_cart_items(cart_id):
 
     return [dict(item) for item in items]
 
+
 # Cart lo product quantity update cheyyadam
 def update_quantity(cart_id, product_id, quantity):
+
+    if quantity <= 0:
+        return False
 
     conn = sqlite3.connect(DB_PATH)
 
     query = """
-        UPDATE cart_items
-        SET quantity = ?
-        WHERE cart_id = ? AND product_id = ?
+        UPDATE cart_order_items
+        SET quantity = ?,
+            subtotal = price * ?
+        WHERE cart_order_id = ? AND product_id = ?
     """
 
-    conn.execute(query, (quantity, cart_id, product_id))
+    conn.execute(
+        query, (quantity, quantity, cart_id, product_id)
+    )
 
     conn.commit()
     conn.close()
+
+    return True
+
 
 # Cart nunchi product remove cheyyadam
 def remove_from_cart(cart_id, product_id):
@@ -128,11 +167,13 @@ def remove_from_cart(cart_id, product_id):
     conn = sqlite3.connect(DB_PATH)
 
     query = """
-        DELETE FROM cart_items
-        WHERE cart_id = ? AND product_id = ?
+        DELETE FROM cart_order_items
+        WHERE cart_order_id = ? AND product_id = ?
     """
 
     conn.execute(query, (cart_id, product_id))
 
     conn.commit()
     conn.close()
+
+    return True

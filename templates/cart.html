@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -88,6 +89,24 @@
             font-size: 14px;
         }
 
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .quantity-controls button {
+            padding: 6px 12px;
+        }
+
+        .remove-btn {
+            background: transparent;
+            color: #d6b477;
+            border: 1px solid #d6b477;
+            padding: 8px 14px;
+        }
+
         .summary {
             text-align: right;
             margin-top: 30px;
@@ -149,9 +168,10 @@
         <div class="summary" id="summary" style="display:none;">
             <p>Total Items: <span id="totalItems">0</span></p>
             <p class="total">Total: ₹<span id="totalPrice">0</span></p>
-            <button onclick="alert('Checkout will be added next!')">
-                Proceed to Checkout
-            </button>
+
+            <button onclick="window.location.href='/checkout'">
+    Proceed to Checkout
+</button>
         </div>
     </main>
 
@@ -159,9 +179,11 @@
         const USER_ID = 1;
 
         async function loadCart() {
+
             const container = document.getElementById("cartItems");
 
             try {
+
                 const response = await fetch(
                     `/api/cart?user_id=${USER_ID}`
                 );
@@ -175,9 +197,12 @@
                 const items = data.items || [];
 
                 if (items.length === 0) {
+
                     container.innerHTML =
                         '<p class="empty">Your cart is empty.</p>';
+
                     document.getElementById("summary").style.display = "none";
+
                     return;
                 }
 
@@ -185,14 +210,17 @@
                 let count = 0;
 
                 container.innerHTML = items.map(item => {
+
                     const price = Number(item.price) || 0;
                     const quantity = Number(item.quantity) || 0;
+                    const subtotal = Number(item.subtotal) || (price * quantity);
 
-                    total += price * quantity;
+                    total += subtotal;
                     count += quantity;
 
                     return `
                         <div class="cart-item">
+
                             <img
                                 src="/static/images/${item.image || ''}"
                                 alt="${item.product_name}"
@@ -200,19 +228,44 @@
                             >
 
                             <div class="details">
+
                                 <h3>${item.product_name}</h3>
+
                                 <p class="price">
                                     ₹${price.toLocaleString("en-IN")}
                                 </p>
-                                <p class="quantity">
-                                    Quantity: ${quantity}
-                                </p>
+
+                                <div class="quantity-controls">
+
+                                    <button onclick="updateQuantity(${item.product_id}, ${quantity - 1})"
+                                        ${quantity <= 1 ? "disabled" : ""}>
+                                        −
+                                    </button>
+
+                                    <span class="quantity">
+                                        ${quantity}
+                                    </span>
+
+                                    <button onclick="updateQuantity(${item.product_id}, ${quantity + 1})">
+                                        +
+                                    </button>
+
+                                </div>
+
                             </div>
+
+                            <button class="remove-btn"
+                                onclick="removeItem(${item.product_id})">
+                                Remove
+                            </button>
+
                         </div>
                     `;
+
                 }).join("");
 
                 document.getElementById("totalItems").textContent = count;
+
                 document.getElementById("totalPrice").textContent =
                     total.toLocaleString("en-IN", {
                         minimumFractionDigits: 2,
@@ -222,11 +275,91 @@
                 document.getElementById("summary").style.display = "block";
 
             } catch (error) {
-                container.textContent = "Error loading cart: " + error.message;
+
+                container.textContent =
+                    "Error loading cart: " + error.message;
+
             }
         }
 
+
+        // Update product quantity
+        async function updateQuantity(productId, quantity) {
+
+            if (quantity < 1) return;
+
+            try {
+
+                const response = await fetch("/api/cart/update", {
+
+                    method: "PUT",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        user_id: USER_ID,
+                        product_id: productId,
+                        quantity: quantity
+                    })
+
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || "Unable to update quantity");
+                }
+
+                loadCart();
+
+            } catch (error) {
+
+                alert(error.message);
+
+            }
+        }
+
+
+        // Remove product from cart
+        async function removeItem(productId) {
+
+            try {
+
+                const response = await fetch("/api/cart/remove", {
+
+                    method: "DELETE",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        user_id: USER_ID,
+                        product_id: productId
+                    })
+
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || "Unable to remove product");
+                }
+
+                loadCart();
+
+            } catch (error) {
+
+                alert(error.message);
+
+            }
+        }
+
+
         loadCart();
+
     </script>
 </body>
 </html>

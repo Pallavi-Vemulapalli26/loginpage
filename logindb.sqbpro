@@ -1,75 +1,116 @@
-<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="logindb.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="3460"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="cart" custom_title="0" dock_id="1" table="4,4:maincart"/><dock_state state="000000ff00000000fd00000001000000020000039100000260fc0100000001fb000000160064006f0063006b00420072006f00770073006500310100000000000003910000011e00ffffff000002690000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="cart" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="48"/><column index="2" value="52"/><column index="3" value="159"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1*">CREATE TABLE cart_order (
-    cart_order_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="logindb.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="4407"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="cart" custom_title="0" dock_id="1" table="4,4:maincart"/><dock_state state="000000ff00000000fd00000001000000020000000000000000fc0100000001fb000000160064006f0063006b00420072006f00770073006500310100000000ffffffff0000011e00ffffff000000000000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings/></tab_browse><tab_sql><sql name="SQL 1*">PRAGMA foreign_keys = OFF;
 
-    is_order INTEGER NOT NULL DEFAULT 0
-        CHECK (is_order IN (0, 1)),
+BEGIN IMMEDIATE;
 
-    total_amount REAL DEFAULT 0,
-
-    billing_name TEXT,
-    billing_phone TEXT,
-    billing_address TEXT,
-    billing_city TEXT,
-    billing_state TEXT,
-    billing_pincode TEXT,
-
-    delivery_name TEXT,
-    delivery_phone TEXT,
-    delivery_address TEXT,
-    delivery_city TEXT,
-    delivery_state TEXT,
-    delivery_pincode TEXT,
-
-    order_status TEXT,
-
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    FOREIGN KEY (user_id) REFERENCES logindetails(id)
+CREATE TABLE billing_addresses (
+    billing_address_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    phone TEXT,
+    address TEXT,
+    city TEXT,
+    state TEXT,
+    pincode TEXT
 );
 
-
-CREATE UNIQUE INDEX unique_active_cart
-ON cart_order(user_id)
-WHERE is_order = 0;
-
-CREATE TABLE cart_order_items (
-    item_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    cart_order_id INTEGER NOT NULL,
-    product_id INTEGER NOT NULL,
-    quantity INTEGER NOT NULL DEFAULT 1,
-    price REAL NOT NULL,
-    subtotal REAL NOT NULL,
-
-    FOREIGN KEY (cart_order_id)
-        REFERENCES cart_order(cart_order_id),
-
-    FOREIGN KEY (product_id)
-        REFERENCES products(product_id),
-
-    UNIQUE (cart_order_id, product_id),
-
-    CHECK (quantity &gt; 0)
+CREATE TABLE delivery_addresses (
+    delivery_address_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    phone TEXT,
+    address TEXT,
+    city TEXT,
+    state TEXT,
+    pincode TEXT
 );
 
-CREATE TABLE payments (
-    payment_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    cart_order_id INTEGER NOT NULL,
-    payment_method TEXT,
-    transaction_id TEXT UNIQUE,
-    payment_amount REAL NOT NULL,
-    payment_status TEXT DEFAULT 'Pending',
-    payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+ALTER TABLE cart_order
+ADD COLUMN billing_address_id INTEGER
+REFERENCES billing_addresses(billing_address_id);
 
-    FOREIGN KEY (cart_order_id)
-        REFERENCES cart_order(cart_order_id)
+ALTER TABLE cart_order
+ADD COLUMN delivery_address_id INTEGER
+REFERENCES delivery_addresses(delivery_address_id);
+
+INSERT INTO billing_addresses (
+    billing_address_id,
+    name,
+    phone,
+    address,
+    city,
+    state,
+    pincode
+)
+SELECT
+    cart_order_id,
+    billing_name,
+    billing_phone,
+    billing_address,
+    billing_city,
+    billing_state,
+    billing_pincode
+FROM cart_order
+WHERE billing_name IS NOT NULL
+   OR billing_phone IS NOT NULL
+   OR billing_address IS NOT NULL
+   OR billing_city IS NOT NULL
+   OR billing_state IS NOT NULL
+   OR billing_pincode IS NOT NULL;
+
+INSERT INTO delivery_addresses (
+    delivery_address_id,
+    name,
+    phone,
+    address,
+    city,
+    state,
+    pincode
+)
+SELECT
+    cart_order_id,
+    delivery_name,
+    delivery_phone,
+    delivery_address,
+    delivery_city,
+    delivery_state,
+    delivery_pincode
+FROM cart_order
+WHERE delivery_name IS NOT NULL
+   OR delivery_phone IS NOT NULL
+   OR delivery_address IS NOT NULL
+   OR delivery_city IS NOT NULL
+   OR delivery_state IS NOT NULL
+   OR delivery_pincode IS NOT NULL;
+
+UPDATE cart_order
+SET billing_address_id = cart_order_id
+WHERE EXISTS (
+    SELECT 1
+    FROM billing_addresses
+    WHERE billing_addresses.billing_address_id = cart_order.cart_order_id
 );
 
-SELECT name
-FROM sqlite_master
-WHERE type = 'table'
-AND name IN (
-    'cart_order',
-    'cart_order_items',
-    'payments'
-);</sql><current_tab id="0"/></tab_sql></sqlb_project>
+UPDATE cart_order
+SET delivery_address_id = cart_order_id
+WHERE EXISTS (
+    SELECT 1
+    FROM delivery_addresses
+    WHERE delivery_addresses.delivery_address_id = cart_order.cart_order_id
+);
+
+COMMIT;
+
+PRAGMA foreign_keys = ON;
+
+PRAGMA foreign_key_check;
+
+SELECT
+    cart_order_id,
+    billing_address_id,
+    delivery_address_id,
+    billing_name,
+    delivery_name
+FROM cart_order
+ORDER BY cart_order_id;
+
+SELECT * FROM billing_addresses;
+
+SELECT * FROM delivery_addresses;</sql><current_tab id="0"/></tab_sql></sqlb_project>
